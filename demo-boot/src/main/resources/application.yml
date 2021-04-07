@@ -1,0 +1,29 @@
+spring:
+  servlet:
+    multipart:
+      # 根据实际需求作调整
+      # 默认最大上传文件大小为1M，单个文件大小
+      max-file-size: 10MB
+      # 默认最大请求大小为10M，总上传的数据大小
+      max-request-size: 40MB
+  application:
+    name: demo-boot
+  datasource:
+    url: jdbc:mysql://192.168.69.150:11110/db_auth?useSSL=false&useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&allowMultiQueries=true&serverTimezone=GMT%2b8
+    username: root
+    password: root753951
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+system:
+  url:
+    shouldSkipList:
+      - "/sso/token"
+      - "/swagger-ui.html"
+      - "/swagger-ui.html/**"
+      - "/webjars/**"
+      - "/swagger-resources/**"
+      - "/v2/*"
+      - "/"
+
+
+

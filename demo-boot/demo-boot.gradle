@@ -1,0 +1,56 @@
+apply plugin: 'application'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'com.bmuschko.docker-spring-boot-application'
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+group = 'me.rocky'
+description 'spring-security-jwt-demo'
+version = '1.0-SNAPSHOT'
+mainClassName = 'me.rocky.DemoApplication'
+
+repositories {
+    mavenLocal()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    implementation('org.springframework.boot:spring-boot-starter-security')
+    implementation('org.springframework.boot:spring-boot-starter-web')
+    implementation ('com.alibaba:fastjson')
+    compile(project(":demo-common"))
+    compileOnly('org.projectlombok:lombok')
+    compileOnly('org.springframework.boot:spring-boot-configuration-processor')
+    annotationProcessor('org.projectlombok:lombok')
+    annotationProcessor('org.springframework.boot:spring-boot-configuration-processor')
+    implementation('mysql:mysql-connector-java')
+    implementation('org.mybatis.generator:mybatis-generator-core')
+    implementation('com.github.pagehelper:pagehelper-spring-boot-starter')
+    implementation('io.springfox:springfox-swagger2')
+    implementation('io.springfox:springfox-swagger-ui')
+    implementation('io.jsonwebtoken:jjwt-api')
+    implementation('io.jsonwebtoken:jjwt-impl')
+    implementation('io.jsonwebtoken:jjwt-jackson')
+}
+
+docker {
+    //如果url不指定的话
+    //Unix默认: url = unix:///var/run/docker.sock
+    //Windows默认: url = tcp://127.0.0.1:2375
+    url = 'http://host:port'
+    registryCredentials {
+        username = ''
+        password = ''
+        email = ''
+    }
+    springBootApplication {
+        baseImage = 'openjdk8-alpine'
+        maintainer = 'inaho00@foxmail.com'
+        ports = [11200]
+        images = ["${project.name}:${project.version}"]
+        jvmArgs = ['-Djava.security.egd=file:/dev/./urandom','-Xms300m' ,'-Xmx300m']
+        mainClassName = 'me.rocky.DemoApplication'
+    }
+}
