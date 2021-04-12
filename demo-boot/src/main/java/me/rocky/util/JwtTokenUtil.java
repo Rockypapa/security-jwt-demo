@@ -53,59 +53,6 @@ public class JwtTokenUtil {
         return null;
     }
 
-    public static String getRoleByRequest(){
-        String token = BaseController.getRequest().getHeader(SecurityConstants.TOKEN_HEADER);
-        if (StringUtils.isNotEmpty(token)){
-            try{
-                // 根据token 获取用户名
-                Jws<Claims> parseToken = Jwts.parserBuilder()
-                        .setSigningKey(SecurityConstants.JWT_SECRET.getBytes())
-                        .build()
-                        .parseClaimsJws(token.replace(SecurityConstants.TOKEN_PREFIX, ""));
-                try{
-                    List<String> roles = (List<String>)parseToken.getBody().get("roles", List.class);
-                    return roles.get(0);
-                }catch (Exception e){
-                    return null;
-                }
-            }catch (ExpiredJwtException e){
-                log.warn("request to parse expired JWT:{} failed:{}",token,e);
-            }catch (UnsupportedJwtException e){
-                log.warn("request to parse unsupported JWT:{} failed:{}",token,e);
-            }catch (MalformedJwtException e){
-                log.warn("request to parse invalid JWT:{} failed:{}",token,e);
-            }catch (SignatureException e){
-                log.warn("request to parse  JWT with invalid signature :{} failed:{}",token,e);
-            }catch (IllegalArgumentException e){
-                log.warn("request to parse empty or null JWT:{} failed:{}",token,e);
-            }
-        }
-        return null;
-    }
-
-    public static String getUsernameByToken(String token){
-        if (StringUtils.isNotEmpty(token)){
-            try{
-                // 根据token 获取用户名
-                Jws<Claims> parseToken = Jwts.parserBuilder()
-                        .setSigningKey(SecurityConstants.JWT_SECRET.getBytes())
-                        .build()
-                        .parseClaimsJws(token.replace(SecurityConstants.TOKEN_PREFIX, ""));
-                return parseToken.getBody().getSubject();
-            }catch (ExpiredJwtException e){
-                log.warn("request to parse expired JWT:{} failed:{}",token,e);
-            }catch (UnsupportedJwtException e){
-                log.warn("request to parse unsupported JWT:{} failed:{}",token,e);
-            }catch (MalformedJwtException e){
-                log.warn("request to parse invalid JWT:{} failed:{}",token,e);
-            }catch (SignatureException e){
-                log.warn("request to parse  JWT with invalid signature :{} failed:{}",token,e);
-            }catch (IllegalArgumentException e){
-                log.warn("request to parse empty or null JWT:{} failed:{}",token,e);
-            }
-        }
-        return null;
-    }
 
     /**
      * 解析 jwt token
@@ -145,20 +92,6 @@ public class JwtTokenUtil {
         TestingAuthenticationToken testingAuthenticationToken = new TestingAuthenticationToken(username, null, new ArrayList<>(0));
         SecurityContextHolder.getContext().setAuthentication(testingAuthenticationToken);
         return SecurityContextHolder.getContext().getAuthentication();
-    }
-
-    /**
-     * 生成 jwt token
-     */
-    public static String generatorJwtToken(String username, List<SimpleGrantedAuthority> roles) {
-        return Jwts.builder().setHeaderParam("TYP",SecurityConstants.TOKEN_TYPE)
-                .setIssuer(SecurityConstants.TOKEN_ISSUER)
-                .setAudience(SecurityConstants.TOKEN_AUDIENCE)
-                .setExpiration(new Date(System.currentTimeMillis()+SecurityConstants.TOKEN_EXPIRE))
-                .setSubject(username)
-                .setIssuedAt(new Date())
-                .claim("roles",roles)
-                .signWith(Keys.hmacShaKeyFor(SecurityConstants.JWT_SECRET.getBytes())).compact();
     }
 
 }
