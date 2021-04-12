@@ -54,9 +54,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .authorizeRequests()
             //跳过验证的路径
             .antMatchers(systemUrlProperties.getShouldSkipList()).permitAll()
-            // 对/sys/路径下的接口设置需要   admin manager任意一个权限
+            // 对/admin/路径下的接口设置需要  
             .antMatchers("/admin/**").hasAnyAuthority("admin")
-            // 对/admin/路径下的接口设置需要  "admin","manager","owner","enforcer"  任意一个权限
+            // 对/user/路径下的接口设置需要  
             .antMatchers("/user/**").hasAnyAuthority("user")
             //其他所有接口需要验证
             .anyRequest().authenticated()
