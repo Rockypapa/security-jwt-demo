@@ -25,9 +25,6 @@ dependencies {
     compileOnly('org.springframework.boot:spring-boot-configuration-processor')
     annotationProcessor('org.projectlombok:lombok')
     annotationProcessor('org.springframework.boot:spring-boot-configuration-processor')
-    implementation('mysql:mysql-connector-java')
-    implementation('org.mybatis.generator:mybatis-generator-core')
-    implementation('com.github.pagehelper:pagehelper-spring-boot-starter')
     implementation('io.springfox:springfox-swagger2')
     implementation('io.springfox:springfox-swagger-ui')
     implementation('io.jsonwebtoken:jjwt-api')
@@ -46,9 +43,9 @@ docker {
         email = ''
     }
     springBootApplication {
-        baseImage = 'openjdk8-alpine'
+        baseImage = 'openjdk:8-alpine'
         maintainer = 'inaho00@foxmail.com'
-        ports = [11200]
+        ports = [9000]
         images = ["${project.name}:${project.version}"]
         jvmArgs = ['-Djava.security.egd=file:/dev/./urandom','-Xms300m' ,'-Xmx300m']
         mainClassName = 'me.rocky.DemoApplication'
